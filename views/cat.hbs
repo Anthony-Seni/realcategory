@@ -1,0 +1,213 @@
+const express = require("express");
+const router = express.Router();
+var app = express();
+const bodyparser = require("body-parser");
+const mysql = require("mysql");
+const path = require("path");
+const hbs = require("hbs");
+
+app.use(bodyparser.json);
+
+app.use(bodyparser.urlencoded({ extended: false }));
+
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/", require("./routes/pages"));
+app.use("/auth", require("./routes/auth"));
+
+const mysqlConnection = mysql.createConnection({
+host: "localhost",
+user: "root",
+password: "",
+database: "nodejs-login",
+});
+
+const db = mysql.createConnection({
+host: process.env.DATABASE_HOST,
+user: process.env.DATABASE_USER,
+password: process.env.DATABASE_PASSWORD,
+database: process.env.DATABASE,
+});
+
+db.connect((error) => {
+if (error) {
+console.log(error);
+} else {
+console.log("DB connected...");
+}
+});
+
+router.get("/register.hbs", (req, res) => {
+res.render("register");
+});
+
+router.get("/html/register.hbs", (req, res) => {
+res.render("register");
+});
+
+app.get("/html/users.html", (req, res) => {
+res.render("users");
+});
+
+router.get("/html/drift.html", (req, res, next) => {
+res.render("drift");
+});
+
+router.get("/users.html", (req, res) => {
+res.render("users");
+});
+
+router.get("/html/categories.html", (req, res) => {
+res.render("categories");
+});
+
+router.get("/html/addcategory.html", (req, res) => {
+res.render("addcategory");
+});
+
+router.get("/categories.html", (req, res) => {
+res.render("categories");
+});
+
+router.get("/html/posts.html", (req, res) => {
+res.render("posts");
+});
+
+router.get("/posts.html", (req, res) => {
+res.render("posts");
+});
+
+router.get("/html/login.html", (req, res) => {
+res.render("login");
+});
+
+router.get("/login.html", (req, res) => {
+res.render("login");
+});
+
+router.get("/html/details.html", (req, res) => {
+res.render("details");
+});
+
+router.get("/details.html", (req, res) => {
+res.render("details");
+});
+
+router.get("/html/Adminindex.html", (req, res) => {
+res.render("Adminindex");
+});
+
+router.get("/Adminindex.html", (req, res) => {
+res.render("Adminindex");
+});
+
+router.get("/html/profile.html", (req, res) => {
+res.render("profile");
+});
+
+router.get("/profile.html", (req, res) => {
+res.render("profile");
+});
+
+router.get("/html/settings.html", (req, res) => {
+res.render("settings");
+});
+
+router.get("/settings.html", (req, res) => {
+res.render("settings");
+});
+
+router.get("/views/single.hbs", (req, res) => {
+res.render("single");
+});
+
+router.get("/addcategory", function (req, res, next) {
+res.render("addcategory", { title: "Add Category" });
+});
+
+router.get("/views/drift/:id", (req, res, next) => {
+res.render("drift", { result: req.params.id });
+});
+
+app.get("/", (req, res) => {
+mysqlConnection.query("SELECT * FROM realcategory", (err, results) => {
+if (!err) console.log(results);
+else console.log(err);
+res.render("categories", {
+results: results,
+});
+});
+});
+
+router.post("/save", (req, res) => {
+let data = {
+Title: req.body.title1,
+};
+let sql = "INSERT INTO realcategory SET ?";
+let query = mysqlConnection.query(
+(sql,
+data,
+(err, results) => {
+if (!err) console.log(results);
+else console.log(err);
+res.redirect("/");
+})
+);
+});
+
+app.listen(5000, () => {
+console.log("Server started on port 5000");
+});
+
+module.exports = router;
+
+
+
+const express = require("express");
+const path = require("path");
+const mysql = require("mysql");
+var app = express();
+const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const
+
+dotenv.config({ path: "./.env" });
+
+const mysqlConnection = mysql.createConnection({
+host: "localhost",
+user: "root",
+password: "",
+database: "nodejs-login",
+});
+
+app.set("views", path.join(__dirname, "views"));
+
+app.set("view engine", "hbs");
+
+app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(express.static("public"));
+
+app.use("/assets", express.static(__dirname + "/public"));
+
+const publicDirectory = path.join(__dirname, "./public");
+app.use(express.static(publicDirectory));
+
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded({ extended: true }));
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json());
+app.use(cookieParser());
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(bodyParser.json());
+
+app.set("view engine", "hbs");
+
+//Define Routes
+app.use("/", require("./routes/pages"));
+app.use("/auth", require("./routes/auth"));
