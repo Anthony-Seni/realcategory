@@ -1,21 +1,13 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.2/css/all.css"
-        integrity="sha384-rtJEYb85SiYWgfpCr0jn174XgJTn4rptSOQsMroFBPQSGLdOC5IbubP6lJ35qoM9" crossorigin="anonymous" />
-    <title>Admin Panel</title>
+    <meta charset="utf-8">
+    <title>CRUD Node.js and Mysql</title>
+    <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
 </head>
 
-
 <body>
+
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
         <div class="container">
@@ -34,9 +26,7 @@
                     <li class="nav-item px-2">
                         <a href="categories.html" class="nav-link active">Categories</a>
                     </li>
-                    <li class="nav-item px-2">
-                        <a href="users.html" class="nav-link">Users</a>
-                    </li>
+
                 </ul>
 
                 <ul class="navbar-nav ml-auto">
@@ -74,31 +64,14 @@
         </div>
     </header>
 
-    <section id="actions" class="py-4 mb-4 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3">
-
-                </div>
-                <div class="col-md-3">
-                    <a href="#" class="btn btn-success btn-block" data-toggle="modal" data-target="#addCategoryModal">
-                        <i class="fas fa-plus"></i> Add Category
-                    </a>
-                </div>
-
-
-            </div>
-        </div>
-    </section>
-
-
     <!-- SEARCH -->
     <section id="search" class="py-4 mb-4 bg-light">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 ml-auto">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search Categories..." />
+                        <input type="text" name="" class="form-control" id="myInput" placeholder="search categories..."
+                            onkeyup="searchFun()">
                         <div class="input-group-append">
                             <button class="btn btn-success">Search</button>
                         </div>
@@ -108,104 +81,132 @@
         </div>
     </section>
 
-    <!-- CATEGORIES -->
-    <section id="categories">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Latest Categories</h4>
-                        </div>
-                        <table class="table table-striped">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>id</th>
-                                    <th>Title</th>
-                                    <th>Date</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#each results}}
-                                <tr>
-                                    <td>{{ id }}</td>
-                                    <td>{{ Title }}</td>
-                                    <td>{{ Date }}</td>
-                                    <td>
-                                        <a href="details.html" class="btn btn-secondary">
-                                            <i class="fas fa-angle-double-right"></i> Details
-                                        </a>
-                                    </td>
-                                </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- FOOTER -->
-    <footer id="main-footer" class="bg-dark text-white mt-5 p-5">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <p class="lead text-center">
-                        Copyright &copy; <span id="year"></span>
-                        Admin Panel
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div class="container">
 
-    <!-- ADD CATEGORY MODAL -->
+        <button class="btn btn-success" data-toggle="modal" data-target="#myModalAdd" style="margin-bottom: 30px;">Add
+            New</button>
+        <table class="table table-striped" id="myTable">
+            <thead>
+                <tr>
+                    <th>Category ID</th>
+                    <th>Category Title</th>
+                    <th>Category Date</th>
 
-    <form action="/save" method="POST">
-        <div class="modal fade" id="addCategoryModal">
-            <div class="modal-dialog modal-lg" role="document">
+                </tr>
+            </thead>
+            <tbody id="myTable" {{#each results}} <tr>
+                <td>{{ id }}</td>
+                <td>{{ Title }}</td>
+                <td>{{ Date }}</td>
+                <td><a href="details.html" class="btn btn-secondary">
+                        <i class="fas fa-angle-double-right"></i> Details
+                    </a></td>
+                </tr>
+                {{/each}}
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add New Product Modal-->
+    <form action="/save" method="post">
+        <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-header bg-success text-white">
-                        <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add New Category</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-
                         <div class="form-group">
-                            <input type="text" name='Title' class="form-control" placeholder="Title" required />
+                            <input type="text" name="Title" class="form-control" placeholder="Title" required>
                         </div>
+
+
 
 
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" data-dismiss="modal">
-                            Save
-                        </button>
+
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>
         </div>
-
-
     </form>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+    <!-- Edit Category Modal-->
+    <form action="/update" method="post">
+        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" name="product_name" class="form-control product_name"
+                                placeholder="Product Name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" name="product_price" class="form-control price" placeholder="Price"
+                                required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="id" class="product_id">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
     <script>
-        // Get the current year for the copyright
-        $("#year").text(new Date().getFullYear());
+
+        const searchFun = () => {
+            let filter = document.getElementById("myInput").value.toUpperCase();
+
+            let myTable = document.getElementById("myTable");
+
+            let tr = myTable.getElementsByTagName("tr");
+
+            for (var i = 0; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName("td")[0];
+
+                if (td) {
+                    let textvalue = td.textContent || td.innerHTML;
+
+                    if (textvalue.toUpperCase().indexOf(filter) > -1) {
+                        tr[1].style.display = "";
+                    } else {
+                        tr[i].style.display = "none"
+                    }
+                }
+            }
+
+        }
+
     </script>
+
+    <script src="/assets/js/jquery-3.3.1.js"></script>
+    <script src="/assets/js/bootstrap.js"></script>
+
+
+
+
 </body>
 
 </html>
